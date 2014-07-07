@@ -65,7 +65,7 @@ NSString* const kInstagramOnlyPhotoFileName = @"tempinstgramphoto.igo";
     [self postImage:image withCaption:nil inView:view];
 }
 + (void) postImage:(UIImage*)image withCaption:(NSString*)caption inView:(UIView*)view {
-    [self postImage:image withCaption:caption inView:view delegate:nil];
+    [self postImage:image withCaption:caption inView:view delegate:[self sharedInstance]];
 }
 
 + (void) postImage:(UIImage*)image withCaption:(NSString*)caption inView:(UIView*)view delegate:(id<UIDocumentInteractionControllerDelegate>)delegate {
@@ -85,8 +85,13 @@ NSString* const kInstagramOnlyPhotoFileName = @"tempinstgramphoto.igo";
     documentInteractionController.delegate = delegate;
     if (caption)
         documentInteractionController.annotation = [NSDictionary dictionaryWithObject:caption forKey:@"InstagramCaption"];
+    [documentInteractionController retain];
     [documentInteractionController presentOpenInMenuFromRect:CGRectZero inView:view animated:YES];
+
 }
 
+- (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller {
+    [controller release];
+}
 
 @end
